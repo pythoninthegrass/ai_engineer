@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 // OASIS GG0170K1 Question and Instructions
 const OASIS_QUESTION = "OASIS GG0170K1";
-const QUESTION_PROMPT = `
+export const QUESTION_PROMPT = `
 OASIS GG0170K1 - Bed-to-Chair Transfer: Current ability to move safely from bed to chair or wheelchair.
 
 Instructions for answering GG0170K1:
@@ -29,7 +29,7 @@ Response Options:
 88 - Not attempted due to medical restriction or safety concerns.
 `;
 
-const TARGET_CHUNK_COUNT = 20;
+export const TARGET_CHUNK_COUNT = 20;
 
 // Schema for Claude's answer
 const OasisAnswerSchema = z.object({
@@ -82,7 +82,7 @@ type SearchResult = {
   similarity: number;
 };
 
-async function embedPrompt(prompt: string): Promise<number[]> {
+export async function embedPrompt(prompt: string): Promise<number[]> {
   try {
     const result = await embed({
       model: registry.textEmbeddingModel("openai:small"),
@@ -95,7 +95,7 @@ async function embedPrompt(prompt: string): Promise<number[]> {
   }
 }
 
-async function findRelevantChunks(
+export async function findRelevantChunks(
   promptEmbedding: number[],
   documentName: string,
   topN: number
@@ -127,28 +127,29 @@ async function findRelevantChunks(
   }
 }
 
-async function answerWithClaude(
-  questionPrompt: string,
-  contextChunks: SearchResult[]
+export function getContextText(contextChunks: SearchResult[]) {
+  return contextChunks
+    .map(
+      (chunk, index) =>
+        `--- Document Context ${index + 1} (Page ${
+          chunk.pageNumber
+        }, Similarity: ${(chunk.similarity * 100).toFixed(1)}%) ---\n${
+          chunk.chunkContent
+        }\n`
+    )
+    .join("\n");
+}
+
+export async function answerWithClaude(
+  contextText: string
 ): Promise<OasisAnswer> {
   try {
-    const contextText = contextChunks
-      .map(
-        (chunk, index) =>
-          `--- Document Context ${index + 1} (Page ${
-            chunk.pageNumber
-          }, Similarity: ${(chunk.similarity * 100).toFixed(1)}%) ---\n${
-            chunk.chunkContent
-          }\n`
-      )
-      .join("\n");
-
     const result = await generateObject({
       model: registry.languageModel("anthropic:sonnet-reasoning-with-schema"),
       schema: OasisAnswerSchema,
       prompt: `You are a healthcare assessment expert specializing in OASIS (Outcome and Assessment Information Set) documentation.
 
-${questionPrompt}
+${QUESTION_PROMPT}
 
 Based on the following patient documentation, determine the most appropriate response for this OASIS item:
 
@@ -339,10 +340,8 @@ async function main() {
 
     // Step 3: Get answer from Claude
     console.log("🧠 Step 3: Getting assessment from Claude with thinking...");
-    const claudeAnswer = await answerWithClaude(
-      QUESTION_PROMPT,
-      relevantChunks
-    );
+    const contextText = getContextText(relevantChunks);
+    const claudeAnswer = await answerWithClaude(contextText);
     console.log("✅ Claude provided assessment\n");
 
     // Step 4: Grade with OpenAI
@@ -367,13 +366,13 @@ async function main() {
   }
 }
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-    console.log("\n✅ OASIS Assessment Workflow completed successfully!");
-  })
-  .catch(async (e) => {
-    console.error("❌ Workflow failed:", e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+// main()
+//   .then(async () => {
+//     await prisma.$disconnect();
+//     console.log("\n✅ OASIS Assessment Workflow completed successfully!");
+//   })
+//   .catch(async (e) => {
+//     console.error("❌ Workflow failed:", e);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   });
