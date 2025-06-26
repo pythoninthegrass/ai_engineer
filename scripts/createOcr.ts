@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaClient } from "../generated/prisma";
-import { generateText, gen } from "ai";
+import { generateText } from "ai";
 import { registry } from "../models";
 import { PDFDocument } from "pdf-lib";
 import { readFileSync, readdirSync } from "fs";
@@ -94,7 +94,7 @@ async function processPdf(filePath: string, fileName: string) {
       }
 
       // Add a small delay to avoid rate limiting
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     } catch (error) {
       console.error(`Error processing page ${pageNum}:`, error);
     }

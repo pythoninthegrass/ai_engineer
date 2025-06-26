@@ -119,7 +119,7 @@ async function processDocumentPage(documentPage: any) {
     }
 
     // Add a small delay to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 100));
   } catch (error) {
     console.error(`Error processing document page ${documentPage.id}:`, error);
   }
