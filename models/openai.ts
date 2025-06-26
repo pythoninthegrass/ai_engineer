@@ -29,8 +29,8 @@ export const openai = customProvider({
       }),
     }),
 
-    "o4-mini": wrapLanguageModel({
-      model: baseOpenai("o4-mini"),
+    "o3-mini": wrapLanguageModel({
+      model: baseOpenai("o3-mini"),
       middleware: defaultSettingsMiddleware({
         settings: {
           maxOutputTokens: MAX_OUTPUT_TOKENS,

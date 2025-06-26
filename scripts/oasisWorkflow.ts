@@ -68,10 +68,6 @@ const GradingSchema = z.object({
   evidenceQuality: z
     .enum(["excellent", "good", "fair", "poor"])
     .describe("Quality of evidence used"),
-  recommendedChoice: z
-    .string()
-    .optional()
-    .describe("Recommended choice if different from the given answer"),
 });
 
 type OasisAnswer = z.infer<typeof OasisAnswerSchema>;
@@ -290,13 +286,6 @@ function displayWorkflowResults(
       console.log(`  🔄 ${weakness}`);
     });
     console.log();
-  }
-
-  if (
-    grading.recommendedChoice &&
-    grading.recommendedChoice !== answer.choice
-  ) {
-    console.log(`💡 Recommended Choice: ${grading.recommendedChoice}`);
   }
 }
 
