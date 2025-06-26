@@ -1,7 +1,5 @@
 # Latest AI trends through a healthcare example
 
-A sophisticated AI-powered system designed to analyze healthcare documentation and assist with clinical assessments, specifically focused on OASIS (Outcome and Assessment Information Set) evaluations and nursing workflows.
-
 ## Overview
 
 This project combines multiple AI models with advanced document processing capabilities to create an intelligent healthcare assistant that can:
