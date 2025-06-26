@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.0-beta.2",
+    "@ai-sdk/google-vertex": "^3.0.0-beta.2",
+    "@ai-sdk/openai": "^2.0.0-beta.1",
+    "@prisma/client": "^6.10.1",
+    "ai": "^5.0.0-beta.1",
+    "braintrust": "^0.0.208",
+    "dotenv": "^16.5.0",
+    "evals": "^1.0.7",
+    "pdf-lib": "^1.17.1",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.4",
+    "prisma": "^6.10.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "db:start": "docker run --name ai-db -d -e POSTGRES_DB=ai -e POSTGRES_PASSWORD=testpass123 -e POSTGRES_USER=postgres -p '5432:5432' ankane/pgvector && sleep 2",
+    "db:connect": "docker exec -it ai-db psql -U postgres -d ai"
+  }
+}
