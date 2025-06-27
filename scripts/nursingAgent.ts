@@ -8,8 +8,7 @@ import { z } from "zod";
 const prisma = new PrismaClient();
 
 // Example nurse query - you can change this
-const NURSE_QUERY =
-  "Does the patient have any wounds? If so, how many and which one is the latest?";
+const NURSE_QUERY = "Does the patient have any wounds?";
 
 type SearchResult = {
   chunkId: number;

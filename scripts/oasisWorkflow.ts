@@ -366,13 +366,13 @@ async function main() {
   }
 }
 
-// main()
-//   .then(async () => {
-//     await prisma.$disconnect();
-//     console.log("\n✅ OASIS Assessment Workflow completed successfully!");
-//   })
-//   .catch(async (e) => {
-//     console.error("❌ Workflow failed:", e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   });
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+    console.log("\n✅ OASIS Assessment Workflow completed successfully!");
+  })
+  .catch(async (e) => {
+    console.error("❌ Workflow failed:", e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
